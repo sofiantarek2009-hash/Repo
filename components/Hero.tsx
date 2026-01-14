@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gift, Ticket, Crown, ArrowRight, Sparkles } from 'lucide-react';
+import { Gift, Ticket, Crown, ArrowRight, Sparkles } from './Icons';
 
 interface HeroProps {
   surveyUrl: string;

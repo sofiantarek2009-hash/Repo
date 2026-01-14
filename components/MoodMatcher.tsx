@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getJollyRecommendation } from '../services/geminiService';
 import { JollyRecommendation, LoadingState } from '../types';
-import { Loader2, Sparkles, PartyPopper } from 'lucide-react';
+import { Loader2, Sparkles, PartyPopper } from './Icons';
 
 export const MoodMatcher: React.FC = () => {
   const [mood, setMood] = useState('');

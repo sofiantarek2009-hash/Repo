@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Particle = ({ style }: { style: React.CSSProperties }) => (
+const Particle: React.FC<{ style: React.CSSProperties }> = ({ style }) => (
   <div className="absolute rounded-full bg-white opacity-20 animate-float" style={style}></div>
 );
 

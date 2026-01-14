@@ -1,17 +1,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { JollyRecommendation } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-
-// Initialize only if key exists to avoid immediate crash on load if missing, 
-// though standard env guarantees it in this context.
-const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getJollyRecommendation = async (mood: string): Promise<JollyRecommendation> => {
-  if (!ai) {
-    throw new Error("API Key not found");
-  }
-
   const modelId = "gemini-3-flash-preview";
   
   const prompt = `
