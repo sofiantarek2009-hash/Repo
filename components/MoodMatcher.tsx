@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getJollyRecommendation } from '../services/geminiService';
 import { JollyRecommendation, LoadingState } from '../types';
-import { Loader2, Sparkles, PartyPopper } from './Icons';
+import { Loader2, Sparkles, PartyPopper, Zap } from './Icons';
 
 export const MoodMatcher: React.FC = () => {
   const [mood, setMood] = useState('');
@@ -12,6 +12,11 @@ export const MoodMatcher: React.FC = () => {
     if (!mood.trim()) return;
     
     setStatus(LoadingState.LOADING);
+    
+    // Simulate "Capturing" data (since we don't have a backend, we pretend!)
+    // We save it to localStorage just in case we want to use it later
+    localStorage.setItem('jollypop_user_vibe', mood);
+    
     try {
       const recommendation = await getJollyRecommendation(mood);
       setResult(recommendation);
@@ -35,7 +40,7 @@ export const MoodMatcher: React.FC = () => {
             AI VIBE CHECK
           </h2>
           <p className="text-gray-400 mb-8 font-sans text-lg max-w-xl mx-auto">
-            Tell our AI how you're feeling (e.g., "Tired from math", "Hyper"), and we'll tell you which Jollypop combo to get.
+            Tell our AI how you're feeling (e.g., "Tired from math", "Hyper"), and we'll record your vibe and prescribe a combo.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-10">
@@ -53,7 +58,9 @@ export const MoodMatcher: React.FC = () => {
               className="bg-jolly-cyan hover:bg-cyan-400 text-black font-display text-lg px-8 py-4 rounded-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
             >
               {status === LoadingState.LOADING ? (
-                <Loader2 className="animate-spin" />
+                <>
+                  <Loader2 className="animate-spin" /> ANALYZING...
+                </>
               ) : (
                 <>
                   <Sparkles size={20} /> GENERATE
@@ -66,15 +73,32 @@ export const MoodMatcher: React.FC = () => {
             <div className="animate-fade-in-up">
               <div className="bg-gradient-to-br from-white/10 to-transparent rounded-2xl p-[1px]">
                 <div className="bg-[#150a22] rounded-2xl p-8 relative overflow-hidden">
-                    <div className="flex flex-col items-center">
+                    {/* Simulated "Captured" Tag */}
+                    <div className="absolute top-4 right-4 bg-red-500/20 text-red-400 border border-red-500/50 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest animate-pulse flex items-center gap-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        Vibe Captured
+                    </div>
+
+                    <div className="flex flex-col items-center pt-4">
                         <span className="text-jolly-lime text-xs font-bold tracking-[0.2em] uppercase mb-4">Your Custom Combo</span>
                         <h3 className="text-2xl md:text-4xl font-display text-white mb-4 leading-tight">{result.snackCombo}</h3>
                         <p className="text-jolly-pink text-xl italic font-serif mb-6 opacity-90">"{result.tagline}"</p>
                         
-                        <div className="inline-flex items-center gap-2 text-gray-400 text-sm font-semibold uppercase tracking-wider">
+                        <div className="inline-flex items-center gap-2 text-gray-400 text-sm font-semibold uppercase tracking-wider mb-8">
                            <PartyPopper className="text-jolly-yellow" size={16} />
                            {result.partyTip}
                         </div>
+
+                        {/* CTA based on result */}
+                        <a 
+                           href="https://docs.google.com/forms/d/e/1FAIpQLScY6jhzkgh90LoLW45LbEGCq2p3UIM3JQJiI1hXWOB4bhoD4A/viewform?usp=dialog" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-jolly-yellow transition-colors"
+                        >
+                            <Zap size={18} />
+                            GET THIS COMBO
+                        </a>
                     </div>
                 </div>
               </div>
