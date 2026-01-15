@@ -1,9 +1,22 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { JollyRecommendation } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Safe initialization that works even if process.env isn't set
+const API_KEY = process.env.API_KEY || (window as any).process?.env?.API_KEY || '';
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const getJollyRecommendation = async (mood: string): Promise<JollyRecommendation> => {
+  // DEMO MODE: If no API Key is detected, simulate a response so the UI still works
+  if (!API_KEY || API_KEY === 'YOUR_API_KEY_HERE') {
+    console.warn("Running in DEMO MODE (No API Key). Returning simulated data.");
+    await new Promise(r => setTimeout(r, 1500)); // Fake network delay
+    return {
+      snackCombo: "DEMO: The 'Broke & Happy' Special",
+      tagline: "You didn't set an API key, but you still deserve chips!",
+      partyTip: "Config your .env file to unlock real AI powers!"
+    };
+  }
+
   const modelId = "gemini-3-flash-preview";
   
   const prompt = `
@@ -43,7 +56,6 @@ export const getJollyRecommendation = async (mood: string): Promise<JollyRecomme
 
   } catch (error) {
     console.error("Gemini API Error:", error);
-    // Fallback in case of API failure to keep the vibe alive
     return {
       snackCombo: "A Classic Mojito & Spicy Chips",
       tagline: "Turn that frown upside down in the bouncy house!",
